@@ -11,7 +11,7 @@ const FILMS = [
     synopsis:
       "A retired conductor returns to the concert hall where her career ended, forced to confront the silence she left behind.",
     accent: "#C1443B",
-    image: "/princess kaguya.jpg",
+    image: "princess kaguya.jpg",
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const FILMS = [
     synopsis:
       "A harbor town's fishing fleet vanishes overnight, and the one boat that returns carries no crew, only questions.",
     accent: "#2F6F8F",
-    image: "/My Neighbor Totoro ⁽¹⁹⁸⁸⁾.jpg",
+    image: "My Neighbor Totoro ⁽¹⁹⁸⁸⁾.jpg",
   },
   {
     id: 3,
@@ -35,7 +35,7 @@ const FILMS = [
     synopsis:
       "Two origami rulers wage a quiet war across a child's bedroom floor, folding and unfolding their fragile borders.",
     accent: "#E8B93F",
-    image: "/Kiki's Delivery Service.jpg",
+    image: "Kiki's Delivery Service.jpg",
   },
   {
     id: 4,
@@ -47,7 +47,7 @@ const FILMS = [
     synopsis:
       "A dying railway town gets one last train, and the stranger who steps off it is carrying more than luggage.",
     accent: "#7A5C3E",
-    image: "/Lời thì thầm của trái tim.jpg",
+    image: "Lời thì thầm của trái tim.jpg",
   },
   {
     id: 5,
@@ -59,7 +59,7 @@ const FILMS = [
     synopsis:
       "A young girl discovers a hidden world of spirits and magic when her family moves to a new town, and she must find her way back home.",
     accent: "#A14D6C",
-    image: "/spirited away.jpg",
+    image: "spirited away.jpg",
   },
   {
     id: 6,
@@ -70,10 +70,10 @@ const FILMS = [
     director: "Mira Okonkwo",
     synopsis:
       "A retired conductor returns to the concert hall where her career ended, forced to confront the silence she left behind.",
-    accent: "#C1443B",
-    image: "/Michael Dudok de Wit (2016)__Trapped on a desert island, surrounded by all kinds of animals, a castaway has to adapt to life in the purest and wildest nature_ During his futile attempts to escape, he encounte.jpg",
+    accent:"#a14d6c",
+    image:"red turtle.jpg",
   },
-  { 
+  {   
     id: 7,
     title: "Princess Mononoke",
     date: "2024-06-20",
@@ -83,7 +83,7 @@ const FILMS = [
     synopsis:
       "A retired conductor returns to the concert hall where her career ended, forced to confront the silence she left behind.",
     accent: "#C1443B",
-    image: "/d1b1fdc8-20ea-4213-8d37-8f5b8163039b.jpg",
+    image: "d1b1fdc8-20ea-4213-8d37-8f5b8163039b.jpg",
 
   },
   {
@@ -95,7 +95,7 @@ const FILMS = [
     director: "Mira Okonkwo",
     synopsis:"the story is about witch",
     accent:"#c1443b",
-    image:"/Mary And The Witch’s Flower.jpg",
+    image:"Mary And The Witch’s Flower.jpg",
   },
   {
       id: 8,
@@ -106,7 +106,7 @@ const FILMS = [
     director: "Mira Okonkwo",
     synopsis:"the story is about witch",
     accent:"#c1443b",
-    image:"/Arrietty titkos világa (2010).jpg",
+    image:"Arrietty titkos világa (2010).jpg",
 
   }
 

@@ -14,9 +14,9 @@
  * so the layout still looks complete.
  */
 export default function HeroSection({
-  heroImageSrc = "/1198793-3054x1666-desktop-hd-studio-ghibli-wallpaper.jpg",
+  heroImageSrc = "1198793-3054x1666-desktop-hd-studio-ghibli-wallpaper.jpg",
   heroImageAlt = "",
-  logoSrc = "/kindpng_834491.png",
+  logoSrc = "kindpng_834491.png",
   logoAlt = "Logo",
   title = "The World Within",
   byline = "Made by Hayao Miyazaki",
