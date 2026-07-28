@@ -4,6 +4,7 @@ import HeroSection from './HeroSection.jsx';
 import FilmCatalog from './FilmCatalog.jsx';
 import History from './History.jsx';
 import About from './About.jsx';
+import NowShowing from './NowShowing.jsx';
 
 const App = () => {
   const [page, setPage] = useState('hero');
@@ -18,7 +19,7 @@ const App = () => {
     );
   }
   if (page === 'catalog') {
-    return <FilmCatalog onBackHome={() => setPage('hero')} />;
+    return <NowShowing onBackHome={() => setPage('hero')} />;
   }
   if (page === 'history') {
     return <History onBackHome={() => setPage('hero')} />;

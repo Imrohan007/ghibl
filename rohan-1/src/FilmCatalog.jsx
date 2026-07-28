@@ -108,7 +108,87 @@ const FILMS = [
     accent:"#c1443b",
     image:"Arrietty titkos világa (2010).jpg",
 
-  }
+  },
+   {
+      id: 9,
+    title: "Only yesterday",
+    date: "2024-06-20",
+    runtime: "110 min",
+    genre: "Drama",
+    director: "Mira Okonkwo",
+    synopsis:"the story is about witch",
+    accent:"#c1443b",
+    image:"c18cd7a6-dd15-4313-a9f0-01dd95907eb7.jpg",
+
+  },
+   {
+      id: 10,
+    title: "From Up on Poppy Hill",
+    date: "2024-06-20",
+    runtime: "110 min",
+    genre: "Drama",
+    director: "Mira Okonkwo",
+    synopsis:"the story is about witch",
+    accent:"#c1443b",
+    image:"From Up on Poppy Hill.jpg",
+
+  },
+   {
+      id: "11",
+    title: "ponyo",
+    date: "2024-06-20",
+    runtime: "110 min",
+    genre: "Drama",
+    director: "Mira Okonkwo",
+    synopsis:"the story is about witch",
+    accent:"#c1443b",
+    image:"ponyo.jpg",
+
+  },
+   {
+      id: 12,
+    title: "Castle in the sky",
+    date: "2024-06-20",
+    runtime: "110 min",
+    genre: "Drama",
+    director: "Mira Okonkwo",
+    synopsis:"the story is about witch",
+    accent:"#c1443b",
+    image:"download.jpg",
+
+  },
+   {
+      id: 13,
+    title: "The Cat Returns",
+    date: "2024-06-20",
+    runtime: "110 min",
+    genre: "Drama",
+    director: "Mira Okonkwo",
+    synopsis:"the story is about witch",
+    accent:"#c1443b",
+    image:"76555cff-4473-4be2-b6d9-657a3a4d7a11.jpg",
+
+  },
+   {
+      id: 14,
+    title: "Tales from Earthsea",
+    date: "2024-06-20",
+    runtime: "110 min",
+    genre: "Drama",
+    director: "Mira Okonkwo",
+    synopsis:"the story is about witch",
+    accent:"#c1443b",
+    image:"Tales from Earthsea.jpg",
+
+  },
+ 
+
+
+
+
+
+
+
 
 ];
 
@@ -183,7 +263,7 @@ function FilmCard({ film, onOpen }) {
           {film.genre}
         </span>
       </div>
-      <div style={{ padding: "20px 22px 24px", textAlign: "left" }}>
+      <div style={{ padding: "20px 22px 14px", textAlign: "left" }}>
         <h3
           style={{
             margin: 0,
@@ -197,7 +277,7 @@ function FilmCard({ film, onOpen }) {
         </h3>
         <p
           style={{
-            margin: "8px 0 0",
+            margin: "10px 0 0",
             fontSize: 13.5,
             color: "#9A968C",
           }}
@@ -223,7 +303,7 @@ function FilmDetail({ film, onClose }) {
       <div
         style={{
           position: "relative",
-          width: "100%",
+          width: "100%", 
           paddingTop: "60%",
           background: "#F1EFE9",
         }}
@@ -328,7 +408,7 @@ export default function FilmCatalog({ onBackHome }) {
         fontFamily: "Arial, Helvetica, sans-serif",
       }}
     >
-      <div style={{ maxWidth: 900, margin: "0 auto" }}>
+      <div style={{ maxWidth: 5000, margin: "0 auto" }}>
         {onBackHome && (
           <button
             onClick={onBackHome}
