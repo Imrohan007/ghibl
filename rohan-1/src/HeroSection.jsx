@@ -7,8 +7,27 @@ import { useEffect, useMemo, useState } from "react";
 // array inline inside JSX (e.g. heroImages={["a.jpg","b.jpg"]}), a
 // new array is created on every re-render, which resets the
 // rotation timer and makes the image look "stuck".
-const DEFAULT_HERO_IMAGES = ["wallpaperflare.com_wallpaper (4).jpg", "wallpaperflare.com_wallpaper (1).jpg", "wallpaperflare.com_wallpaper (3).jpg"
-  ,"1198793-3054x1666-desktop-hd-studio-ghibli-wallpaper.jpg"
+const DEFAULT_HERO_IMAGES = ["wallpaperflare.com_wallpaper (4).jpg", "wallpaperflare.com_wallpaper (2).jpg", "wallpaperflare.com_wallpaper (3).jpg","wallpaperflare.com_wallpaper (1).jpg",
+  "wallpaperflare.com_wallpaper (6).jpg","wallpaperflare.com_wallpaper (7).jpg","wallpaperflare.com_wallpaper (8).jpg"
+  ,"wallpaperflare.com_wallpaper (9).jpg","1198793-3054x1666-desktop-hd-studio-ghibli-wallpaper.jpg"
+];
+
+// Optional: give each hero image its own movie title so the corner
+// badge (top-left) updates automatically as the slideshow advances.
+// Order must match heroImages. If omitted, or shorter than the number
+// of slides, the single `filmTitle` prop is used as a fallback for any
+// slide that doesn't have an entry here.
+const DEFAULT_SLIDE_TITLES = [
+  "Porco Rosso",
+  "My Neighbor Totoro",
+  "Spirited Away",
+  "The Secret World of Arrietty",
+  "Castle in the Sky",
+  "Howl's Moving Castle",
+  "Princess Mononoke",
+  "Wind Rises",
+  "Kiki's Delivery Service"
+
 ];
 
 /**
@@ -22,6 +41,12 @@ const DEFAULT_HERO_IMAGES = ["wallpaperflare.com_wallpaper (4).jpg", "wallpaperf
  *   heroImageAlt     - alt text for the hero image
  *   logoSrc          - url/path for the logo image
  *   logoAlt          - alt text for the logo
+ *   filmTitle        - fallback badge text used when a slide has no
+ *                       matching entry in slideTitles (or when there's
+ *                       only one slide)
+ *   slideTitles      - array of movie titles matched by index to
+ *                       heroImages; the top-left badge switches to the
+ *                       matching title as the slideshow advances
  *   title            - main heading text
  *   byline           - subheading / credit line
  *   onExploreFilms   - called when the "Explore Films" link is clicked
@@ -49,7 +74,8 @@ export default function HeroSection({
   cornerBadgeAlt = "Studio logo",
   cornerBadgeName = "Studio Ghibli",
   cornerBadgeSubtitle = "スタジオジブリ作品",
-  filmTitle = "Scene from the ghibli studio films",
+  filmTitle = "Nausicaä of the Valley of the Wind",
+  slideTitles = DEFAULT_SLIDE_TITLES,
   onExploreFilms,
   onOurHistory,
   onAboutStudio,
@@ -60,6 +86,12 @@ export default function HeroSection({
   }, [heroImages, heroImageSrc]);
 
   const [activeSlide, setActiveSlide] = useState(0);
+
+  // The badge text follows whichever slide is currently showing. If a
+  // slide doesn't have a matching entry in slideTitles, fall back to
+  // the single filmTitle prop so nothing breaks.
+  const currentFilmTitle =
+    (Array.isArray(slideTitles) && slideTitles[activeSlide]) || filmTitle;
 
   useEffect(() => {
     setActiveSlide(0);
@@ -88,8 +120,13 @@ export default function HeroSection({
       <style>{css}</style>
 
       <section className="hs-hero" style={styles.hero}>
-        {filmTitle ? (
-          <div className="hs-film-badge hs-rise">{filmTitle}</div>
+        {currentFilmTitle ? (
+          <div
+            key={currentFilmTitle}
+            className="hs-film-badge hs-rise hs-film-badge-fade"
+          >
+            {currentFilmTitle}
+          </div>
         ) : null}
         {slides.length > 0 ? (
           <div className="hs-hero-slides" aria-live="off">
@@ -202,6 +239,14 @@ const css = `
 @media (max-width: 520px) {
   .hs-film-badge { font-size: 0.85rem; padding: 8px 16px; }
 }
+.hs-film-badge-fade {
+  animation: hs-rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    hs-badge-fade 0.6s ease-in-out;
+}
+@keyframes hs-badge-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 
 .hs-corner-badge {
   position: absolute;
@@ -266,7 +311,7 @@ const css = `
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 3s ease-in-out;
+  transition: opacity 4.9s ease-in-out;
   animation: hs-kenburns 26s ease-in-out infinite alternate;
 }
 .hs-hero-img.hs-slide-active {
@@ -406,7 +451,7 @@ const css = `
 
 .hs-rise {
   opacity: 0;
-  animation: hs-rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: hs-rise-in 6.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 .hs-logo.hs-rise { animation: hs-rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards, hs-float 6s ease-in-out 0.9s infinite; }
 .hs-title.hs-rise { animation-delay: 0.12s; }
@@ -425,7 +470,7 @@ const css = `
   width: 0%;
   height: 1px;
   background: currentColor;
-  transition: width 0.3s ease, left 0.3s ease;
+  transition: width 6s ease, left 6s ease;
 }
 .hs-nav-link:hover { color: #17356f; }
 .hs-nav-link:hover::after { width: 100%; left: 0%; }
@@ -505,15 +550,14 @@ const styles = {
     filter: "drop-shadow(0 8px 18px rgba(31,74,65,0.18))",
   },
   logoPlaceholder: {
-    width: "400px",
-    height: "400px",
+    width: "140px",
+    height: "140px",
     margin: "0 auto 32px",
     borderRadius: "50%",
     background: "#f1efe9",
     border: "2px solid #2a2a2a",
     display: "flex",
     alignItems: "center",
-
     justifyContent: "center",
     fontSize: "0.75rem",
     letterSpacing: "0.05em",
