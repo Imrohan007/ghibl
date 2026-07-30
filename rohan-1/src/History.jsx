@@ -19,76 +19,74 @@ export default function History({
   galleryImages = defaultGalleryImages,
 }) {
   return (
-    <div style={styles.page}>
-      <div style={styles.wrap}>
+    <div className="hist-page">
+      <style>{css}</style>
+      <div className="hist-wrap">
         {onBackHome && (
-          <button onClick={onBackHome} style={styles.backBtn}>
+          <button onClick={onBackHome} className="hist-back-btn">
             ← Home
           </button>
         )}
 
-        <p style={styles.eyebrow}>Since 1985</p>
-        <h1 style={styles.h1}>Our History</h1>
-        <p style={styles.intro}>
+        <p className="hist-eyebrow">Since 1985</p>
+        <h1 className="hist-h1">Our History</h1>
+        <p className="hist-intro">
           What began as a handful of animators sharing one small studio has
           grown into a body of work spanning decades, each film built frame
           by frame with the same patience as the first.
         </p>
 
         {/* --- Timeline --- */}
-        <div style={styles.timeline}>
-          <div style={styles.timelineTrack} aria-hidden="true" />
+        <div className="hist-timeline">
           {milestones.map((m, i) => (
-            <div
-              key={m.year + i}
-              style={{
-                ...styles.timelineRow,
-                flexDirection: i % 2 === 0 ? "row" : "row-reverse",
-              }}
-            >
-              <div style={styles.timelineCard}>
-                <span style={styles.timelineYear}>{m.year}</span>
-                <h3 style={styles.timelineTitle}>{m.title}</h3>
-                <p style={styles.timelineText}>{m.text}</p>
+            <div key={m.year + i} className="hist-timeline-row">
+              <div className="hist-timeline-rail" aria-hidden="true">
+                <span className="hist-timeline-dot" />
+                {i !== milestones.length - 1 && (
+                  <span className="hist-timeline-line" />
+                )}
               </div>
-              <div style={styles.timelineDot} aria-hidden="true" />
-              <div style={styles.timelineSpacer} />
+              <div className="hist-timeline-card">
+                <span className="hist-timeline-year">{m.year}</span>
+                <h3 className="hist-timeline-title">{m.title}</h3>
+                <p className="hist-timeline-text">{m.text}</p>
+              </div>
             </div>
           ))}
         </div>
 
         {/* --- Video --- */}
-        <section style={styles.videoSection}>
-          <p style={styles.eyebrow}>Watch</p>
-          <h2 style={styles.h2}>The Story, In Motion</h2>
-          <div style={styles.videoFrame}>
-            <div style={styles.sprockets} aria-hidden="true">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <span key={i} style={styles.sprocketHole} />
+        <section className="hist-section">
+          <p className="hist-eyebrow">Watch</p>
+          <h2 className="hist-h2">The Story, In Motion</h2>
+          <div className="hist-video-frame">
+            <div className="hist-sprockets" aria-hidden="true">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <span key={i} className="hist-sprocket-hole" />
               ))}
             </div>
-            <div style={styles.videoInner}>
+            <div className="hist-video-inner">
               <iframe
-                style={styles.iframe}
+                className="hist-iframe"
                 src={`https://www.youtube.com/embed/${youtubeId}`}
                 title="Studio history video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
             </div>
-            <div style={styles.sprockets} aria-hidden="true">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <span key={i} style={styles.sprocketHole} />
+            <div className="hist-sprockets" aria-hidden="true">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <span key={i} className="hist-sprocket-hole" />
               ))}
             </div>
           </div>
         </section>
 
         {/* --- Gallery --- */}
-        <section style={styles.gallerySection}>
-          <p style={styles.eyebrow}>Along the Way</p>
-          <h2 style={styles.h2}>Moments From the Studio</h2>
-          <div style={styles.galleryGrid}>
+        <section className="hist-section">
+          <p className="hist-eyebrow">Along the Way</p>
+          <h2 className="hist-h2">Moments From the Studio</h2>
+          <div className="hist-gallery-grid">
             {galleryImages.map((img, i) => (
               <GalleryTile key={i} src={img.src} alt={img.alt} />
             ))}
@@ -104,14 +102,14 @@ function GalleryTile({ src, alt }) {
   const showPlaceholder = !src || errored;
 
   return (
-    <div style={styles.galleryTile}>
+    <div className="hist-gallery-tile">
       {showPlaceholder ? (
-        <div style={styles.galleryPlaceholder}>{alt}</div>
+        <div className="hist-gallery-placeholder">{alt}</div>
       ) : (
         <img
           src={src}
           alt={alt}
-          style={styles.galleryImg}
+          className="hist-gallery-img"
           onError={() => setErrored(true)}
         />
       )}
@@ -156,177 +154,218 @@ const defaultGalleryImages = [
   { src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROPZgV6JI2U6fJINCniaP1C3-vkkyTREGKAvxgoOpN7U8KhO8Y15whWEk&s=10", alt: "Storyboard sketches" },
 ];
 
-const styles = {
-  page: {
-    background: "#FAF9F6",
-    minHeight: "100vh",
-    padding: "40px 24px 100px",
-    fontFamily: "Arial, Helvetica, sans-serif",
-    color: "#1E1E1C",
-  },
-  wrap: { maxWidth: 760, margin: "0 auto" },
-  backBtn: {
-    all: "unset",
-    cursor: "pointer",
-    fontSize: 13,
-    color: "#9A968C",
-    marginBottom: 24,
-    display: "inline-block",
-  },
-  eyebrow: {
-    margin: "0 0 8px",
-    fontSize: 12,
-    letterSpacing: "0.14em",
-    textTransform: "uppercase",
-    color: "#6B8F71",
-    fontWeight: 700,
-  },
-  h1: {
-    margin: "0 0 20px",
-    fontSize: 40,
-    fontWeight: 600,
-    color: "#1E1E1C",
-    fontFamily: "Georgia, 'Times New Roman', serif",
-  },
-  h2: {
-    margin: "0 0 28px",
-    fontSize: 28,
-    fontWeight: 600,
-    fontFamily: "Georgia, 'Times New Roman', serif",
-  },
-  intro: {
-    fontSize: 16,
-    lineHeight: 1.7,
-    color: "#57544C",
-    maxWidth: 560,
-    marginBottom: 56,
-  },
+const css = `
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Jost:wght@400;500&display=swap');
 
-  /* timeline */
-  timeline: {
-    position: "relative",
-    marginBottom: 72,
-    paddingTop: 8,
-  },
-  timelineTrack: {
-    position: "absolute",
-    left: "50%",
-    top: 0,
-    bottom: 0,
-    width: 2,
-    background:
-      "linear-gradient(180deg, #9fd4e8 0%, #6B8F71 50%, #2f6b5e 100%)",
-    transform: "translateX(-50%)",
-  },
-  timelineRow: {
-    display: "flex",
-    alignItems: "center",
-    position: "relative",
-    marginBottom: 40,
-  },
-  timelineCard: {
-    flex: "0 1 46%",
-    background: "#fff",
-    border: "1px solid #E7E3D9",
-    borderRadius: 10,
-    padding: "18px 22px",
-  },
-  timelineYear: {
-    display: "inline-block",
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    color: "#6B8F71",
-    marginBottom: 6,
-  },
-  timelineTitle: {
-    margin: "0 0 8px",
-    fontSize: 18,
-    fontFamily: "Georgia, 'Times New Roman', serif",
-    fontWeight: 600,
-  },
-  timelineText: {
-    margin: 0,
-    fontSize: 14,
-    lineHeight: 1.6,
-    color: "#57544C",
-  },
-  timelineDot: {
-    position: "absolute",
-    left: "50%",
-    width: 12,
-    height: 12,
-    borderRadius: "50%",
-    background: "#6B8F71",
-    border: "3px solid #FAF9F6",
-    transform: "translateX(-50%)",
-    boxShadow: "0 0 0 1px #6B8F71",
-  },
-  timelineSpacer: { flex: "0 1 46%" },
+.hist-page {
+  font-family: 'Jost', Arial, sans-serif;
+  background: #FFFFFF;
+  color: #1F1F1F;
+  min-height: 100vh;
+  padding: 40px 24px 100px;
+}
 
-  /* video */
-  videoSection: { marginBottom: 72 },
-  videoFrame: {
-    background: "#1E1E1C",
-    borderRadius: 12,
-    padding: "10px 0",
-  },
-  sprockets: {
-    display: "flex",
-    justifyContent: "space-evenly",
-    padding: "0 16px",
-  },
-  sprocketHole: {
-    width: 8,
-    height: 8,
-    borderRadius: 2,
-    background: "#FAF9F6",
-    opacity: 0.6,
-    margin: "6px 0",
-  },
-  videoInner: {
-    position: "relative",
-    width: "100%",
-    paddingTop: "56.25%",
-    margin: "4px 0",
-  },
-  iframe: {
-    position: "absolute",
-    inset: 0,
-    width: "100%",
-    height: "100%",
-    border: "none",
-  },
+.hist-wrap { max-width: 760px; margin: 0 auto; }
 
-  /* gallery */
-  gallerySection: {},
-  galleryGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-    gap: 16,
-  },
-  galleryTile: {
-    aspectRatio: "4 / 3",
-    borderRadius: 10,
-    overflow: "hidden",
-    background: "#F1EFE9",
-    border: "1px solid #E7E3D9",
-  },
-  galleryImg: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    display: "block",
-  },
-  galleryPlaceholder: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    fontSize: 12,
-    color: "#9A968C",
-    padding: 12,
-  },
-};
+.hist-back-btn {
+  all: unset;
+  cursor: pointer;
+  font-size: 13px;
+  color: #8A8A8A;
+  margin-bottom: 24px;
+  display: inline-block;
+  font-family: 'Jost', Arial, sans-serif;
+}
+.hist-back-btn:hover { color: #1F1F1F; }
+
+.hist-eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8A8A8A;
+  font-weight: 500;
+}
+
+.hist-h1 {
+  margin: 0 0 20px;
+  font-size: clamp(2.2rem, 5vw, 2.8rem);
+  font-weight: 600;
+  color: #141414;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 0.01em;
+}
+
+.hist-h2 {
+  margin: 0 0 28px;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: #141414;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.hist-intro {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #5C5C5C;
+  max-width: 560px;
+  margin: 0 0 64px;
+}
+
+.hist-section { margin-bottom: 72px; }
+
+/* --- Timeline: single left rail, dots align to their own card automatically --- */
+.hist-timeline { margin-bottom: 72px; }
+
+.hist-timeline-row {
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+}
+
+.hist-timeline-rail {
+  flex: 0 0 auto;
+  width: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hist-timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #1F1F1F;
+  box-shadow: 0 0 0 4px rgba(31,31,31,0.08);
+  flex: 0 0 auto;
+  margin-top: 8px;
+}
+
+.hist-timeline-line {
+  width: 2px;
+  flex: 1 1 auto;
+  min-height: 24px;
+  margin-top: 4px;
+  background: linear-gradient(180deg, #D9D9D9, #EFEFEF);
+}
+
+.hist-timeline-card {
+  flex: 1 1 auto;
+  padding-bottom: 40px;
+}
+
+.hist-timeline-row:last-child .hist-timeline-card { padding-bottom: 0; }
+
+.hist-timeline-year {
+  display: inline-block;
+  font-family: 'Jost', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8A8A8A;
+  margin-bottom: 8px;
+}
+
+.hist-timeline-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #141414;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.hist-timeline-text {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #5C5C5C;
+  max-width: 480px;
+}
+
+/* --- Video --- */
+.hist-video-frame {
+  background: #141414;
+  border-radius: 10px;
+  padding: 10px 0;
+}
+
+.hist-sprockets {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 0 16px;
+}
+
+.hist-sprocket-hole {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: #FFFFFF;
+  opacity: 0.55;
+  margin: 6px 0;
+}
+
+.hist-video-inner {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  margin: 4px 0;
+}
+
+.hist-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* --- Gallery --- */
+.hist-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.hist-gallery-tile {
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #F5F5F5;
+  border: 1px solid #E9E9E9;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.hist-gallery-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(20,20,20,0.1);
+}
+
+.hist-gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hist-gallery-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 12px;
+  color: #8A8A8A;
+  padding: 12px;
+  font-family: 'Jost', Arial, sans-serif;
+}
+
+/* --- Responsive --- */
+@media (max-width: 520px) {
+  .hist-timeline-row { gap: 16px; }
+  .hist-timeline-text { max-width: 100%; }
+}
+`;

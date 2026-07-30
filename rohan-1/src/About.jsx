@@ -6,21 +6,17 @@
  *   galleryImages - array of { src, alt } shown as thumbnails up top
  *   photoSrc      - the large photo next to the text block
  *   photoAlt      - alt text for that photo
- *   contact       - { website, phone, address (array of lines) }
- *   hours         - array of { day, time } for the museum schedule
- *   admission     - array of { label, price }
  */
 export default function About({
   onBackHome,
   galleryImages = defaultGalleryImages,
-  photoSrc ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe5x75FCyt7nHKDxlVpbE72Y0kdbm8noMjfAIUJ-52tJ8r9dOdDDJprA_S&s=10" ,
+  photoSrc = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRe5x75FCyt7nHKDxlVpbE72Y0kdbm8noMjfAIUJ-52tJ8r9dOdDDJprA_S&s=10",
   photoAlt = "Studio photo",
-  contact = defaultContact,
-  hours = defaultHours,
-  admission = defaultAdmission,
 }) {
   return (
     <div style={styles.page}>
+      <style>{fontImport}</style>
+
       {onBackHome && (
         <div style={styles.backRow}>
           <button onClick={onBackHome} style={styles.backBtn}>
@@ -49,6 +45,7 @@ export default function About({
         </div>
 
         <div style={styles.textCol}>
+          <span style={styles.eyebrow}>Mitaka, Tokyo</span>
           <h1 style={styles.h1}>About Studio Ghibli</h1>
 
           <p style={styles.disclaimer}>
@@ -86,39 +83,15 @@ export default function About({
         </div>
       </div>
 
-      {/* --- Footer: contact + hours --- */}
+      {/* --- Signature divider: a small scatter, quiet nod to soot on a
+           windowsill, not a character reproduction --- */}
+      <Divider />
+
+      {/* --- Footer: just the studio name and an original mark. The real
+           Ghibli logo features Totoro and is copyrighted, so this is an
+           original wordmark rather than a reproduction of it. --- */}
       <div style={styles.footer}>
-        <div style={styles.footerInner}>
-          <div style={styles.footerCol}>
-            <h2 style={styles.h2}>Contact</h2>
-            <p style={styles.footerLine}>Website: {contact.website}</p>
-            <p style={styles.footerLine}>Phone: {contact.phone}</p>
-            <p style={styles.footerLine}>Address:</p>
-            {contact.address.map((line, i) => (
-              <p key={i} style={styles.footerLine}>
-                {line}
-              </p>
-            ))}
-          </div>
-
-          <div style={styles.footerCol}>
-            <h2 style={styles.h2}>Museum Hours</h2>
-            {hours.map((h, i) => (
-              <p key={i} style={styles.footerLine}>
-                {h.day} {h.time}
-              </p>
-            ))}
-          </div>
-
-          <div style={styles.footerCol}>
-            <h2 style={styles.h2}>Admission</h2>
-            {admission.map((a, i) => (
-              <p key={i} style={styles.footerLine}>
-                {a.label}: {a.price}
-              </p>
-            ))}
-          </div>
-        </div>
+       <img src="studio-ghibli-logo-uhd-4k-wallpaper.jpg" style={{ height: 158, width:200  , }} />
       </div>
     </div>
   );
@@ -132,6 +105,41 @@ function Thumb({ src, alt }) {
   );
 }
 
+function Divider() {
+  // A quiet scatter of soot-toned dots — a small, restrained nod to the
+  // studio's world rather than a reproduction of any character.
+  const dots = [
+    { r: 5, x: 40 },
+    { r: 3, x: 80 },
+    { r: 6, x: 130 },
+    { r: 2.5, x: 175 },
+    { r: 4, x: 230 },
+  ];
+  return (
+    <div style={styles.dividerWrap} aria-hidden="true">
+      <svg width="270" height="18" viewBox="0 0 270 18">
+        {dots.map((d, i) => (
+          <circle key={i} cx={d.x} cy={9} r={d.r} fill="#2F4A3A" opacity={0.55} />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+function LeafMark() {
+  // A small original mark — a single leaf, not any part of the real
+  // Ghibli logo (which centers on Totoro and is copyrighted).
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M4 20c8-1 13-6 15-15-9 1-14 6-15 15z"
+        fill="#2F4A3A"
+      />
+      <path d="M6 18c4-4 7-8 12-13" stroke="#F6F1E4" strokeWidth="1" />
+    </svg>
+  );
+}
+
 // Neutral stand-ins — swap for your own images. Real Ghibli photos/art
 // are copyrighted, so none are included here.
 const defaultGalleryImages = [
@@ -141,135 +149,155 @@ const defaultGalleryImages = [
   { src: "https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2021%2F10%2Floewe-foundation-studio-ghibli-museum-mitaka-hayao-miyazaki-tokuma-memorial-cultural-animation-1.jpg?q=90&w=800&cbr=1&fit=max", alt: "Gallery photo 4" },
 ];
 
-const defaultContact = {
-  website: "www.example.com",
-  phone: "555-555-555",
-  address: ["123 Example Ave", "Tokyo, Japan 01234"],
+const fontImport = `@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500&display=swap');`;
+
+// Palette grounded in the studio's own world: paper, forest, soot, and a
+// single warm gold accent — kept quiet everywhere but the divider.
+const palette = {
+  paper: "#FFFFFF",
+  forest: "#2F4A3A",
+  forestDeep: "#1F3327",
+  soot: "#262521",
+  sootSoft: "#5B584F",
+  gold: "#C89B4A",
+  line: "#E4DCC7",
+  white: "#FFFFFF",
 };
-
-const defaultHours = [
-  { day: "Sunday", time: "1–4pm" },
-  { day: "Monday", time: "1–4pm" },
-  { day: "Tuesday", time: "1–4pm" },
-  { day: "Wednesday", time: "1–4pm" },
-  { day: "Thursday", time: "1–4pm" },
-  { day: "Friday", time: "1–4pm" },
-  { day: "Saturday", time: "1–4pm" },
-];
-
-const defaultAdmission = [
-  { label: "Ages 0–5", price: "Free" },
-  { label: "Adults", price: "$35" },
-  { label: "Seniors", price: "$25" },
-];
 
 const styles = {
   page: {
-    background: "#ffffff",
+    background: palette.paper,
     minHeight: "100vh",
-    fontFamily: "Arial, Helvetica, sans-serif",
-    color: "#1a1a1a",
+    fontFamily: "'Inter', Helvetica, sans-serif",
+    color: palette.soot,
   },
-  backRow: { padding: "20px 24px 0" },
+  backRow: { padding: "24px 24px 0" },
   backBtn: {
     all: "unset",
     cursor: "pointer",
     fontSize: 13,
-    color: "#9A968C",
+    letterSpacing: "0.03em",
+    color: palette.sootSoft,
   },
 
   /* thumbnail strip */
   thumbRow: {
     display: "flex",
     justifyContent: "center",
-    gap: 16,
+    gap: 14,
     flexWrap: "wrap",
-    padding: "24px 24px 40px",
+    padding: "28px 24px 44px",
   },
   thumbImg: {
     width: 140,
     height: 160,
     objectFit: "cover",
-    borderRadius: 4,
+    borderRadius: 3,
+    border: `1px solid ${palette.line}`,
   },
   thumbPlaceholder: {
     width: 140,
     height: 160,
-    background: "#B9B9B9",
-    borderRadius: 4,
+    background: palette.line,
+    borderRadius: 3,
   },
 
   /* photo + text */
   mainRow: {
     display: "flex",
     flexWrap: "wrap",
-    gap: 32,
-    maxWidth: 1000,
+    gap: 40,
+    maxWidth: 1020,
     margin: "0 auto",
-    padding: "0 24px 60px",
+    padding: "0 24px 56px",
   },
   photoCol: { flex: "1 1 380px" },
   photo: {
     width: "100%",
     height: "100%",
-    minHeight: 320,
+    minHeight: 340,
     objectFit: "cover",
-    borderRadius: 6,
+    borderRadius: 4,
     display: "block",
   },
   photoPlaceholder: {
     width: "100%",
-    minHeight: 320,
-    background: "#B9B9B9",
-    borderRadius: 6,
+    minHeight: 340,
+    background: palette.line,
+    borderRadius: 4,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "#fff",
+    color: palette.white,
     fontSize: 14,
     letterSpacing: "0.05em",
   },
   textCol: { flex: "1 1 420px" },
+  eyebrow: {
+    display: "block",
+    fontSize: 12,
+    fontWeight: 500,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    color: palette.gold,
+    marginBottom: 10,
+  },
   h1: {
-    margin: "0 0 16px",
-    fontSize: 26,
-    fontWeight: 700,
-    fontFamily: "Georgia, 'Times New Roman', serif",
+    margin: "0 0 18px",
+    fontSize: 32,
+    fontWeight: 600,
+    fontFamily: "'Fraunces', Georgia, serif",
+    color: palette.forestDeep,
   },
   disclaimer: {
-    fontSize: 14,
-    fontWeight: 700,
+    fontSize: 13,
+    fontWeight: 500,
     lineHeight: 1.6,
-    marginBottom: 18,
-    color: "#1a1a1a",
+    marginBottom: 20,
+    padding: "10px 14px",
+    borderLeft: `2px solid ${palette.gold}`,
+    color: palette.sootSoft,
+    background: "rgba(200,155,74,0.08)",
   },
   p: {
-    fontSize: 14,
-    lineHeight: 1.7,
-    color: "#3a3a3a",
+    fontSize: 15,
+    lineHeight: 1.75,
+    color: "#3E3C36",
     marginBottom: 16,
   },
 
-  /* footer */
-  footer: { background: "#B9B9B9", padding: "40px 24px" },
-  footerInner: {
-    maxWidth: 1000,
+  /* signature divider */
+  dividerWrap: {
+    display: "flex",
+    justifyContent: "center",
+    padding: "0 0 8px",
+  },
+
+  /* footer — simple white brand mark, replaces the old info block */
+  footer: {
+    background: palette.white,
+    borderTop: `1px solid ${palette.line}`,
+    padding: "40px 24px",
+    justifyContent: "center",
+  },
+  brandMark: {
+    maxWidth: 1020,
     margin: "0 auto",
     display: "flex",
-    flexWrap: "wrap",
-    gap: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
   },
-  footerCol: { flex: "1 1 200px" },
-  h2: {
-    margin: "0 0 14px",
-    fontSize: 19,
-    fontWeight: 700,
-    fontFamily: "Georgia, 'Times New Roman', serif",
-  },
-  footerLine: {
-    margin: "0 0 6px",
-    fontSize: 13,
-    lineHeight: 1.6,
-    color: "#2a2a2a",
+  brandWord: {
+    fontFamily: "'Fraunces', Georgia, serif",
+    fontSize: 18,
+    fontWeight: 600,
+    letterSpacing: "0.02em",
+    color: palette.forestDeep,
+      justifyContent: "center",
   },
 };
+      /*--- <div style={styles.brandMark}>
+          <LeafMark />
+          <span style={styles.brandWord}>Studio Ghibli</span>
+        </div>---*/
