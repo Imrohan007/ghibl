@@ -12,11 +12,12 @@ const DEFAULT_HERO_IMAGES = ["wallpaperflare.com_wallpaper (4).jpg", "wallpaperf
   ,"wallpaperflare.com_wallpaper (9).jpg","1198793-3054x1666-desktop-hd-studio-ghibli-wallpaper.jpg"
 ];
 
-// Optional: give each hero image its own movie title so the corner
-// badge (top-left) updates automatically as the slideshow advances.
-// Order must match heroImages. If omitted, or shorter than the number
-// of slides, the single `filmTitle` prop is used as a fallback for any
-// slide that doesn't have an entry here.
+// Optional: give each hero image its own movie title so the big
+// centered title (and the "Directed By" / "Released In" corners, if
+// you pass matching arrays) updates automatically as the slideshow
+// advances. Order must match heroImages. If omitted, or shorter than
+// the number of slides, the single fallback props below are used for
+// any slide that doesn't have an entry.
 const DEFAULT_SLIDE_TITLES = [
   "Porco Rosso",
   "My Neighbor Totoro",
@@ -25,60 +26,81 @@ const DEFAULT_SLIDE_TITLES = [
   "Castle in the Sky",
   "Howl's Moving Castle",
   "Princess Mononoke",
-  "Wind Rises",
-  "Kiki's Delivery Service"
+  "The Wind Rises",
+  "Kiki's Delivery Service",
+];
 
+const DEFAULT_SLIDE_DIRECTORS = [
+  "Hayao Miyazaki",
+  "Hayao Miyazaki",
+  "Hayao Miyazaki",
+  "Hiromasa Yonebayashi",
+  "Hayao Miyazaki",
+  "Hayao Miyazaki",
+  "Hayao Miyazaki",
+  "Hayao Miyazaki",
+  "Hayao Miyazaki",
+];
+
+const DEFAULT_SLIDE_YEARS = [
+  "1992",
+  "1988",
+  "2001",
+  "2010",
+  "1986",
+  "2004",
+  "1997",
+  "2013",
+  "1989",
 ];
 
 /**
  * HeroSection
  *
- * Props let you pass real images in without touching the component:
+ * Same rotation/props logic as before — image slideshow, kenburns pan,
+ * crossfade, reduced-motion support — just re-laid-out so the overlay
+ * reads like a film-studio splash: a slim nav bar across the top of
+ * the image, a small eyebrow line, a large centered film title, and
+ * "Directed By" / "Released In" credits anchored to the bottom corners.
+ *
  *   heroImageSrc     - url/path for a single hero background image
  *   heroImages       - optional array of urls/paths; if given (2+), the
  *                       hero crossfades through them automatically
- *   heroRotateMs     - milliseconds between slides (default 2000 = 2s)
+ *   heroRotateMs     - milliseconds between slides (default 9000)
  *   heroImageAlt     - alt text for the hero image
- *   logoSrc          - url/path for the logo image
- *   logoAlt          - alt text for the logo
- *   filmTitle        - fallback badge text used when a slide has no
+ *   eyebrow          - small caps line above the big title (e.g. "The World Within")
+ *   filmTitle        - fallback big title used when a slide has no
  *                       matching entry in slideTitles (or when there's
  *                       only one slide)
- *   slideTitles      - array of movie titles matched by index to
- *                       heroImages; the top-left badge switches to the
- *                       matching title as the slideshow advances
- *   title            - main heading text
- *   byline           - subheading / credit line
- *   onExploreFilms   - called when the "Explore Films" link is clicked
- *   onOurHistory     - called when the "Our History" link is clicked
- *   onAboutStudio    - called when the "About Studio" link is clicked
+ *   slideTitles      - array of film titles matched by index to heroImages
+ *   director         - fallback "Directed By" name
+ *   slideDirectors   - array of director names matched by index to heroImages
+ *   releaseYear      - fallback "Released In" year
+ *   slideYears       - array of release years matched by index to heroImages
+ *   brandName        - top-left studio name (e.g. "Studio Ghibli")
+ *   brandSubtitle    - top-left small subtitle under the brand name
+ *   navLinks         - array of { label, href, onClick } shown centered in the top bar
+ *   onSearch         - called when the search icon (top-right) is clicked
  *
  * If no images are given at all, painterly placeholders render instead
  * so the layout still looks complete.
- *
- * Motion is restrained and respects prefers-reduced-motion: a slow cloud
- * drift and sun glow in the sky, a soft staggered entrance for the content,
- * a gentle logo float, an underline that draws in on nav hover, and (when
- * heroImages has more than one entry) a slow crossfade between photos.
  */
 export default function HeroSection({
   heroImageSrc,
   heroImages = DEFAULT_HERO_IMAGES,
   heroRotateMs = 9000,
   heroImageAlt = "Studio Ghibli inspired scenes",
-  logoSrc = "kindpng_834491.png",
-  logoAlt = "Logo",
-  title = "The World Within",
-  byline = "Made by Hayao Miyazaki",
-  cornerBadgeLogoSrc = "kindpng_834491.png",
-  cornerBadgeAlt = "Studio logo",
-  cornerBadgeName = "Studio Ghibli",
-  cornerBadgeSubtitle = "スタジオジブリ作品",
+  eyebrow = "The World Within",
   filmTitle = "Nausicaä of the Valley of the Wind",
   slideTitles = DEFAULT_SLIDE_TITLES,
-  onExploreFilms,
-  onOurHistory,
-  onAboutStudio,
+  director = "Hayao Miyazaki",
+  slideDirectors = DEFAULT_SLIDE_DIRECTORS,
+  releaseYear = "1984",
+  slideYears = DEFAULT_SLIDE_YEARS,
+  brandName = "Studio Ghibli",
+  brandSubtitle = "スタジオジブリ作品",
+  navLinks,
+  onSearch,
 }) {
   const slides = useMemo(() => {
     if (Array.isArray(heroImages) && heroImages.length > 0) return heroImages;
@@ -87,11 +109,15 @@ export default function HeroSection({
 
   const [activeSlide, setActiveSlide] = useState(0);
 
-  // The badge text follows whichever slide is currently showing. If a
-  // slide doesn't have a matching entry in slideTitles, fall back to
-  // the single filmTitle prop so nothing breaks.
+  // Title / director / year all follow whichever slide is currently
+  // showing. If a slide doesn't have a matching entry in the arrays,
+  // fall back to the single props so nothing breaks.
   const currentFilmTitle =
     (Array.isArray(slideTitles) && slideTitles[activeSlide]) || filmTitle;
+  const currentDirector =
+    (Array.isArray(slideDirectors) && slideDirectors[activeSlide]) || director;
+  const currentYear =
+    (Array.isArray(slideYears) && slideYears[activeSlide]) || releaseYear;
 
   useEffect(() => {
     setActiveSlide(0);
@@ -109,25 +135,21 @@ export default function HeroSection({
     return () => clearInterval(id);
   }, [slides, heroRotateMs]);
 
-  const links = [
-    { label: "About Studio", href: "#about", onClick: onAboutStudio },
-    { label: "Explore Films", href: "#films", onClick: onExploreFilms },
-    { label: "Our History", href: "#history", onClick: onOurHistory },
-  ];
+  const links =
+    navLinks && navLinks.length
+      ? navLinks
+      : [
+          { label: "Exhibitions", href: "#exhibitions" },
+          { label: "Films", href: "#films" },
+          { label: "About", href: "#about" },
+          { label: "Studio Goods", href: "#goods" },
+        ];
 
   return (
     <div style={styles.page}>
       <style>{css}</style>
 
       <section className="hs-hero" style={styles.hero}>
-        {currentFilmTitle ? (
-          <div
-            key={currentFilmTitle}
-            className="hs-film-badge hs-rise hs-film-badge-fade"
-          >
-            {currentFilmTitle}
-          </div>
-        ) : null}
         {slides.length > 0 ? (
           <div className="hs-hero-slides" aria-live="off">
             {slides.map((src, i) => (
@@ -158,64 +180,67 @@ export default function HeroSection({
             <span className="hs-grain" />
           </div>
         )}
-        <div className="hs-hero-veil" aria-hidden="true" />
 
-        {cornerBadgeName || cornerBadgeLogoSrc ? (
-          <div className="hs-corner-badge hs-rise">
-            {cornerBadgeLogoSrc && (
-              <img
-                className="hs-corner-badge-logo"
-                src={cornerBadgeLogoSrc}
-                alt={cornerBadgeAlt}
-              />
-            )}
-            <div className="hs-corner-badge-text">
-              {cornerBadgeName && (
-                <span className="hs-corner-badge-name">{cornerBadgeName}</span>
-              )}
-              {cornerBadgeSubtitle && (
-                <span className="hs-corner-badge-subtitle">
-                  {cornerBadgeSubtitle}
-                </span>
-              )}
-            </div>
+        {/* legibility veils: darken top for the nav, darken bottom for the credits */}
+        <div className="hs-hero-veil-top" aria-hidden="true" />
+        <div className="hs-hero-veil-bottom" aria-hidden="true" />
+
+        {/* top bar: brand mark, nav links, search */}
+        <div className="hs-topbar hs-rise">
+          <div className="hs-brand">
+            <span className="hs-brand-sub">{brandSubtitle}</span>
+            <span className="hs-brand-name">{brandName}</span>
           </div>
-        ) : null}
-      </section>
 
-      <div style={styles.content}>
-        <h1 className="hs-title hs-rise" style={styles.title}>
-          {title}
-        </h1>
-        <p className="hs-byline hs-rise" style={styles.byline}>
-          {byline}
-        </p>
+          <nav className="hs-nav" aria-label="Primary">
+            {links.map((link) => (
+              <a
+                key={link.href || link.label}
+                href={link.href || "#"}
+                className="hs-nav-link"
+                onClick={(e) => {
+                  if (link.onClick) {
+                    e.preventDefault();
+                    link.onClick();
+                  }
+                }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
 
-        <div className="hs-divider hs-rise" aria-hidden="true">
-          <span className="hs-divider-line" />
-          <span className="hs-divider-mark" />
-          <span className="hs-divider-line" />
+          <button
+            type="button"
+            className="hs-search"
+            aria-label="Search"
+            onClick={onSearch}
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="1.6" />
+              <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </button>
         </div>
 
-        <nav className="hs-nav hs-rise" style={{ ...styles.nav, borderTop: "none", paddingTop: 0 }}>
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="hs-nav-link"
-              style={styles.navLink}
-              onClick={(e) => {
-                if (link.onClick) {
-                  e.preventDefault();
-                  link.onClick();
-                }
-              }}
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
-      </div>
+        {/* center: eyebrow + big film title */}
+        <div className="hs-center">
+          <div className="hs-eyebrow hs-rise">{eyebrow}</div>
+          <h1 key={currentFilmTitle} className="hs-title hs-title-fade">
+            {currentFilmTitle}
+          </h1>
+        </div>
+
+        {/* bottom corners: director / release year */}
+        <div className="hs-credit hs-credit-left hs-rise">
+          <span className="hs-credit-label">Directed By</span>
+          <span className="hs-credit-value">{currentDirector}</span>
+        </div>
+        <div className="hs-credit hs-credit-right hs-rise">
+          <span className="hs-credit-label">Released In</span>
+          <span className="hs-credit-value">{currentYear}</span>
+        </div>
+      </section>
     </div>
   );
 }
@@ -223,80 +248,21 @@ export default function HeroSection({
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Jost:wght@400;500&display=swap');
 
-.hs-film-badge {
+.hs-hero-veil-top {
   position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.92);
-  color: #1a1a1a;
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  padding: 12px 24px;
-}
-@media (max-width: 520px) {
-  .hs-film-badge { font-size: 0.85rem; padding: 8px 16px; }
-}
-.hs-film-badge-fade {
-  animation: hs-rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-    hs-badge-fade 0.6s ease-in-out;
-}
-@keyframes hs-badge-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-.hs-corner-badge {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 22px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(2px);
-  box-shadow: -2px -2px 14px rgba(0,0,0,0.08);
-}
-.hs-corner-badge-logo {
-  width: 88px;
-  height: 88px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-.hs-corner-badge-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.3;
-  text-align: left;
-}
-.hs-corner-badge-name {
-  font-family: 'Jost', Arial, sans-serif;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #2a2a2a;
-  letter-spacing: 0.01em;
-}
-.hs-corner-badge-subtitle {
-  font-family: 'Jost', Arial, sans-serif;
-  font-size: 0.75rem;
-  color: #6b6b6b;
-}
-@media (max-width: 520px) {
-  .hs-corner-badge { padding: 10px 14px; gap: 10px; }
-  .hs-corner-badge-logo { width: 64px; height: 64px; }
-  .hs-corner-badge-name { font-size: 0.8rem; }
-  .hs-corner-badge-subtitle { font-size: 0.65rem; }
-}
-
-.hs-hero-veil {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(250,248,244,0) 60%, #faf8f4 100%);
+  inset: 0 0 auto 0;
+  height: 22%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.35), transparent);
   pointer-events: none;
+  z-index: 2;
+}
+.hs-hero-veil-bottom {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 26%;
+  background: linear-gradient(0deg, rgba(0,0,0,0.4), transparent);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .hs-hero-slides {
@@ -311,12 +277,153 @@ const css = `
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 4.9s ease-in-out;
+  transition: opacity 1.4s ease-in-out;
   animation: hs-kenburns 26s ease-in-out infinite alternate;
 }
 .hs-hero-img.hs-slide-active {
   opacity: 1;
   z-index: 1;
+}
+
+.hs-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 36px;
+  color: #fff;
+  font-family: 'Jost', Arial, sans-serif;
+}
+.hs-brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+}
+.hs-brand-sub {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+.hs-brand-name {
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.hs-nav {
+  display: flex;
+  gap: 34px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.hs-nav-link {
+  position: relative;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-bottom: 4px;
+  opacity: 0.92;
+}
+.hs-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.35s ease;
+}
+.hs-nav-link:hover { opacity: 1; }
+.hs-nav-link:hover::after { width: 100%; }
+.hs-search {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  opacity: 0.92;
+}
+.hs-search:hover { opacity: 1; }
+
+.hs-center {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  pointer-events: none;
+}
+.hs-eyebrow {
+  font-family: 'Jost', Arial, sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0.9;
+  margin-bottom: 14px;
+}
+.hs-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(2.2rem, 6vw, 4.6rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  margin: 0;
+  max-width: 16ch;
+  animation: hs-title-fade-in 0.9s ease-in-out;
+}
+@keyframes hs-title-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hs-credit {
+  position: absolute;
+  bottom: 26px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Jost', Arial, sans-serif;
+  color: #fff;
+  line-height: 1.45;
+}
+.hs-credit-left { left: 36px; align-items: flex-start; text-align: left; }
+.hs-credit-right { right: 36px; align-items: flex-end; text-align: right; }
+.hs-credit-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+.hs-credit-value {
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .hs-topbar { padding: 16px 18px; gap: 12px; }
+  .hs-nav { display: none; }
+  .hs-brand-name { font-size: 0.7rem; }
+  .hs-credit { bottom: 16px; }
+  .hs-credit-left { left: 18px; }
+  .hs-credit-right { right: 18px; }
 }
 
 .hs-cloud {
@@ -366,34 +473,6 @@ const css = `
   width: 110%;
   height: 8%;
   background: #16332b;
-  -webkit-mask-image: radial-gradient(circle at 4% 100%, #000 55%, transparent 56%),
-    radial-gradient(circle at 11% 100%, #000 60%, transparent 61%),
-    radial-gradient(circle at 18% 100%, #000 50%, transparent 51%),
-    radial-gradient(circle at 25% 100%, #000 62%, transparent 63%),
-    radial-gradient(circle at 32% 100%, #000 52%, transparent 53%),
-    radial-gradient(circle at 39% 100%, #000 58%, transparent 59%),
-    radial-gradient(circle at 46% 100%, #000 50%, transparent 51%),
-    radial-gradient(circle at 53% 100%, #000 60%, transparent 61%),
-    radial-gradient(circle at 60% 100%, #000 52%, transparent 53%),
-    radial-gradient(circle at 67% 100%, #000 58%, transparent 59%),
-    radial-gradient(circle at 74% 100%, #000 50%, transparent 51%),
-    radial-gradient(circle at 81% 100%, #000 60%, transparent 61%),
-    radial-gradient(circle at 88% 100%, #000 52%, transparent 53%),
-    radial-gradient(circle at 95% 100%, #000 58%, transparent 59%);
-  mask-image: radial-gradient(circle at 4% 100%, #000 55%, transparent 56%),
-    radial-gradient(circle at 11% 100%, #000 60%, transparent 61%),
-    radial-gradient(circle at 18% 100%, #000 50%, transparent 51%),
-    radial-gradient(circle at 25% 100%, #000 62%, transparent 63%),
-    radial-gradient(circle at 32% 100%, #000 52%, transparent 53%),
-    radial-gradient(circle at 39% 100%, #000 58%, transparent 59%),
-    radial-gradient(circle at 46% 100%, #000 50%, transparent 51%),
-    radial-gradient(circle at 53% 100%, #000 60%, transparent 61%),
-    radial-gradient(circle at 60% 100%, #000 52%, transparent 53%),
-    radial-gradient(circle at 67% 100%, #000 58%, transparent 59%),
-    radial-gradient(circle at 74% 100%, #000 50%, transparent 51%),
-    radial-gradient(circle at 81% 100%, #000 60%, transparent 61%),
-    radial-gradient(circle at 88% 100%, #000 52%, transparent 53%),
-    radial-gradient(circle at 95% 100%, #000 58%, transparent 59%);
 }
 
 .hs-bird {
@@ -425,55 +504,13 @@ const css = `
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.hs-divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin-bottom: 28px;
-}
-.hs-divider-line {
-  height: 1px;
-  width: 64px;
-  background: linear-gradient(90deg, transparent, #b9c3ba);
-}
-.hs-divider-line:first-of-type { background: linear-gradient(90deg, transparent, #b9c3ba); }
-.hs-divider-line:last-of-type { background: linear-gradient(270deg, transparent, #b9c3ba); }
-.hs-divider-mark {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #d4a657;
-  box-shadow: 0 0 0 4px rgba(212,166,87,0.18);
-}
-
-.hs-logo { animation: hs-float 6s ease-in-out infinite; }
-
 .hs-rise {
   opacity: 0;
-  animation: hs-rise-in 6.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: hs-rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-.hs-logo.hs-rise { animation: hs-rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards, hs-float 6s ease-in-out 0.9s infinite; }
-.hs-title.hs-rise { animation-delay: 0.12s; }
-.hs-byline.hs-rise { animation-delay: 0.24s; }
-.hs-nav.hs-rise { animation-delay: 0.36s; }
-
-.hs-nav-link {
-  position: relative;
-  padding-bottom: 4px;
-}
-.hs-nav-link::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 0%;
-  height: 1px;
-  background: currentColor;
-  transition: width 6s ease, left 6s ease;
-}
-.hs-nav-link:hover { color: #17356f; }
-.hs-nav-link:hover::after { width: 100%; left: 0%; }
+.hs-eyebrow.hs-rise { animation-delay: 0.1s; }
+.hs-credit-left.hs-rise { animation-delay: 0.2s; }
+.hs-credit-right.hs-rise { animation-delay: 0.2s; }
 
 @keyframes hs-drift {
   from { transform: translateX(0); }
@@ -487,12 +524,8 @@ const css = `
   from { transform: scale(1); }
   to   { transform: scale(1.07); }
 }
-@keyframes hs-float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
-}
 @keyframes hs-rise-in {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes hs-fly {
@@ -503,7 +536,7 @@ const css = `
 
 @media (prefers-reduced-motion: reduce) {
   .hs-hero-img { animation: none !important; transition: none !important; }
-  .hs-cloud, .hs-sun, .hs-logo, .hs-rise, .hs-bird {
+  .hs-cloud, .hs-sun, .hs-rise, .hs-bird, .hs-title {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
@@ -534,69 +567,5 @@ const styles = {
     position: "absolute",
     inset: 0,
     overflow: "hidden",
-  },
-  content: {
-    maxWidth: "900px",
-    margin: "0 auto",
-    padding: "40px 24px 60px",
-    textAlign: "center",
-    position: "relative",
-  },
-  logo: {
-    maxWidth: "190px",
-    height: "auto",
-    margin: "0 auto 32px",
-    display: "block",
-    filter: "drop-shadow(0 8px 18px rgba(31,74,65,0.18))",
-  },
-  logoPlaceholder: {
-    width: "140px",
-    height: "140px",
-    margin: "0 auto 32px",
-    borderRadius: "50%",
-    background: "#f1efe9",
-    border: "2px solid #2a2a2a",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "0.75rem",
-    letterSpacing: "0.05em",
-    color: "#444",
-    textAlign: "center",
-    lineHeight: 1.4,
-    padding: "12px",
-    whiteSpace: "pre-line",
-  },
-  title: {
-    fontFamily: "'Cormorant Garamond', Georgia, serif",
-    fontSize: "clamp(2.8rem, 6.5vw, 4.8rem)",
-    fontWeight: 600,
-    letterSpacing: "0.01em",
-    color: "#1a2b23",
-    marginBottom: "16px",
-    lineHeight: 1.08,
-  },
-  byline: {
-    fontFamily: "'Cormorant Garamond', Georgia, serif",
-    fontSize: "clamp(1.15rem, 2.5vw, 1.5rem)",
-    color: "#4c5b52",
-    fontStyle: "italic",
-    marginBottom: "32px",
-  },
-  nav: {
-    display: "flex",
-    justifyContent: "center",
-    flexWrap: "wrap",
-    gap: "28px",
-    paddingTop: "16px",
-    borderTop: "1px solid #ddd",
-  },
-  navLink: {
-    color: "#2a5db0",
-    textDecoration: "none",
-    fontSize: "0.95rem",
-    letterSpacing: "0.02em",
-    fontFamily: "'Jost', Arial, sans-serif",
-    cursor: "pointer",
   },
 };

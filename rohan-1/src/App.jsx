@@ -4,7 +4,6 @@ import HeroSection from './HeroSection.jsx';
 import FilmCatalog from './FilmCatalog.jsx';
 import History from './History.jsx';
 import About from './About.jsx';
-import NowShowing from './FilmCatalog.jsx';
 
 const App = () => {
   const [page, setPage] = useState('hero');
@@ -12,9 +11,11 @@ const App = () => {
   if (page === 'hero') {
     return (
       <HeroSection
-        onExploreFilms={() => setPage('catalog')}
-        onOurHistory={() => setPage('history')}
-        onAboutStudio={() => setPage('about')}
+        navLinks={[
+          { label: 'Films', onClick: () => setPage('catalog') },
+          { label: 'About', onClick: () => setPage('about') },
+          { label: 'Studio Goods', onClick: () => setPage('history') },
+        ]}
       />
     );
   }
