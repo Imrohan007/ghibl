@@ -188,8 +188,21 @@ html, body, #root {
 }
 
 @media (max-width: 640px) {
-  .hs-topbar { padding: 16px 18px; gap: 12px; }
-  .hs-nav { display: none; }
+  .hs-topbar {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+    gap: 10px;
+    row-gap: 10px;
+  }
+  .hs-brand { order: 1; }
+  .hs-search { order: 2; }
+  .hs-nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 16px 20px;
+  }
+  .hs-nav-link { font-size: 0.68rem; letter-spacing: 0.06em; }
   .hs-brand-name { font-size: 0.7rem; }
   .hs-credit { bottom: 16px; }
   .hs-credit-left { left: 18px; }
