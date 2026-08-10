@@ -248,6 +248,15 @@ export default function HeroSection({
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Jost:wght@400;500&display=swap');
 
+/* Reset default browser/body margin so the hero is truly edge-to-edge.
+   Without this, the 8px default body margin leaves a visible gap
+   around the section even though it's set to width: 100%. */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
 .hs-hero-veil-top {
   position: absolute;
   inset: 0 0 auto 0;
@@ -553,9 +562,8 @@ const styles = {
   hero: {
     position: "relative",
     width: "100%",
-    height: "80vh",
+    height: "100vh",
     minHeight: "520px",
-    maxHeight: "780px",
     overflow: "hidden",
     background:
       "linear-gradient(180deg, #7EC8E3 0%, #BFE7D6 40%, #2F6B5E 72%, #1F4A41 100%)",
