@@ -465,7 +465,7 @@ html, body, #root {
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,244,214,0.95) 0%, rgba(255,224,150,0.5) 55%, transparent 75%);
+  background: radial-gradient(circle, rgba(255,244,214,0.95) 0%, rgba(255,224,150,0.5) 55%, transparent 45%);
   animation: hs-glow 6s ease-in-out infinite;
 }
 
